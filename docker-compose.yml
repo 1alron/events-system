@@ -1,0 +1,62 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  journal:
+    build: ./journal_service
+    container_name: journal_service
+    volumes:
+      - ./journal_service:/app
+    ports:
+      - "3001:3000"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/journal_development
+
+  booking:
+    build: ./booking_service
+    container_name: booking_service
+    volumes:
+      - ./booking_service:/app
+    ports:
+      - "3002:3000"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/booking_development
+
+  account:
+    build: ./account_service
+    container_name: account_service
+    volumes:
+      - ./account_service:/app
+    ports:
+      - "3003:3000"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/account_development
+
+  ticket:
+    build: ./ticket_service
+    container_name: ticket_service
+    volumes:
+      - ./ticket_service:/app
+    ports:
+      - "3004:3000"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/ticket_development
+
+volumes:
+  pg_data:
