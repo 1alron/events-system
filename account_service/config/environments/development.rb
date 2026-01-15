@@ -6,6 +6,9 @@ Rails.application.configure do
   # Make code changes take effect immediately without server restart.
   config.enable_reloading = true
 
+  config.hosts << "booking:3000"
+  config.hosts << "ticket:3000"
+
   # Do not eager load code on boot.
   config.eager_load = false
 

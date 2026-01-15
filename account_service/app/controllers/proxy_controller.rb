@@ -11,7 +11,7 @@ class ProxyController < ApplicationController
       headers: headers_json,
       query: { user_id: params[:id] }
     )
-    render json: response
+    render json: response.body
   end
 
   # Получение броней пользователей
@@ -21,7 +21,7 @@ class ProxyController < ApplicationController
       headers: headers_json,
       query: { user_id: params[:id] }
     )
-    render json: response
+    render json: response.body
   end
 
   # Получение цены
@@ -30,7 +30,7 @@ class ProxyController < ApplicationController
       "#{BOOKING_URL}/prices",
       query: params.permit(:event_date, :category)
     )
-    render json: response
+    render json: response.body
   end
 
   # Создать бронь
@@ -41,7 +41,7 @@ class ProxyController < ApplicationController
       headers: headers_json,
       body: body
     )
-    render json: response
+    render json: response.body
   end
 
   # Отменить бронь
@@ -50,7 +50,7 @@ class ProxyController < ApplicationController
       "#{BOOKING_URL}/reservations/#{params[:reservation_id]}",
       headers: headers_json
     )
-    render json: response
+    render json: response.body
   end
 
   # Инфо о брони
@@ -59,7 +59,7 @@ class ProxyController < ApplicationController
       "#{BOOKING_URL}/reservations/#{params[:reservation_id]}",
       headers: headers_json
     )
-    render json: response
+    render json: response.body
   end
 
   # Купить билет
@@ -70,7 +70,7 @@ class ProxyController < ApplicationController
       headers: headers_json,
       body: body
     )
-    render json: response
+    render json: response.body
   end
 
   # Получить билет
@@ -79,7 +79,7 @@ class ProxyController < ApplicationController
       "#{TICKETS_URL}/tickets/#{params[:ticket_id]}",
       headers: headers_json
     )
-    render json: response
+    render json: response.body
   end
 
   # Заблокировать билет
@@ -90,7 +90,7 @@ class ProxyController < ApplicationController
       headers: headers_json,
       body: body
     )
-    render json: response
+    render json: response.body
   end
 
   private
