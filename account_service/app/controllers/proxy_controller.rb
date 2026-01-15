@@ -1,8 +1,8 @@
 class ProxyController < ApplicationController
   before_action :authorize!
 
-  BOOKING_URL = "http://booking_service:3000"
-  TICKETS_URL = "http://tickets_service:3000"
+  BOOKING_URL = ENV.fetch("BOOKING_URL")
+  TICKETS_URL = ENV.fetch("TICKETS_URL")
 
   # Получение билетов пользователя
   def tickets_list
