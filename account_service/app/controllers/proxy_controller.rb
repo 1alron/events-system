@@ -7,7 +7,7 @@ class ProxyController < ApplicationController
   # Получение билетов пользователя
   def tickets_list
     response = HTTParty.get(
-      "#{TICKETS_URL}/tickets",
+      "#{TICKETS_URL}/users/#{params[:user_id]}/tickets",
       headers: headers_json,
       query: { user_id: params[:id] }
     )
@@ -17,7 +17,7 @@ class ProxyController < ApplicationController
   # Получение броней пользователей
   def reservations_list
     response = HTTParty.get(
-      "#{BOOKING_URL}/reservations",
+      "#{BOOKING_URL}/users/#{params[:user_id]}/reservations",
       headers: headers_json,
       query: { user_id: params[:id] }
     )
