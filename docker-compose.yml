@@ -45,8 +45,8 @@ services:
       - postgres
     environment:
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/account_development
-      BOOKING_URL: http://booking_service:3000
-      TICKETS_URL: http://ticket_service:3000
+      BOOKING_URL: http://booking:3000
+      TICKETS_URL: http://ticket:3000
 
   ticket:
     build: ./ticket_service

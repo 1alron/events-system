@@ -98,7 +98,7 @@ class ProxyController < ApplicationController
   def authorize!
     token = request.headers["Authorization"]
     decoded = JWT.decode(token, "secret") rescue nil
-    head :unauthorized unless decoded
+    render json: { error: "Unauthorized" }, status: :unauthorized unless decoded
   end
 
   def headers_json
