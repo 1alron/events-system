@@ -18,5 +18,5 @@ class Event < ApplicationRecord
       category: category,
       base_price: base_price
     )
-    end
+  end
 end

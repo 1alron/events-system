@@ -1,7 +1,6 @@
 class Ticket < ApplicationRecord
   belongs_to :event
-
-  enum :category, { vip: 1, fanzone: 0 }
+  belongs_to :event_category
 
   validates :event_id, presence: true
   validates :user_id, presence: true
@@ -11,10 +10,10 @@ class Ticket < ApplicationRecord
   scope :available, -> { where(blocked: false) }
 
   def vip?
-    category == 'vip' || category == 0
+    category == "vip" || category == 0
   end
 
   def fanzone?
-    category == 'fanzone' || category == 1
+    category == "fanzone" || category == 1
   end
 end

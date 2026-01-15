@@ -1,9 +1,7 @@
 vip_category = Category.find_or_create_by!(name: 'vip') do |cat|
-  cat.description = 'VIP зона'
 end
 
 fanzone_category = Category.find_or_create_by!(name: 'fanzone') do |cat|
-  cat.description = 'Фан-зона'
 end
 
 event1 = Event.create!(
@@ -16,12 +14,12 @@ event2 = Event.create!(
   date: 3.weeks.from_now
 )
 
-event1_vip = event1.add_category(vip_category, base_price: 5000)
-event1_fanzone = event1.add_category(fanzone_category, base_price: 3000)
-event1_standard = event1.add_category(standard_category, base_price: 1500)
+event1_vip = event1.add_category(vip_category, 5000)
+event1_fanzone = event1.add_category(fanzone_category, 3000)
 
-event2_vip = event2.add_category(vip_category, base_price: 4500)
-event2_fanzone = event2.add_category(fanzone_category, base_price: 2500)
+
+event2_vip = event2.add_category(vip_category, 4500)
+event2_fanzone = event2.add_category(fanzone_category, 2500)
 
 Reservation.create!(
   event: event1,
