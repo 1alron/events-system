@@ -22,3 +22,12 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+
+# 1. Создать базу
+rails db:create
+
+# 2. Запустить миграции
+rails db:migrate
+
+# 4. Запустить seeds
+rails db:seed
