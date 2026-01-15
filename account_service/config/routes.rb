@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
   # Сервис личного кабинета
-  post "/users/register", to: "users#register"
-  post "/users/login", to: "users#login"
-  post "/users/logout", to: "users#logout"
+  post    "/users/register",                         to: "users#register"
+  post    "/users/login",                            to: "users#login"
+  post    "/users/logout",                           to: "users#logout"
 
   # Сервис бронирования
   get    "/users/:id/prices",                        to: "proxy#prices"
