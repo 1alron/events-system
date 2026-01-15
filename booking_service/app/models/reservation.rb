@@ -4,7 +4,7 @@ class Reservation < ApplicationRecord
   enum :category, { vip: 1, fanzone: 0 }
 
   validates :event_id, presence: true
-  validates :category, presence: true
+  validates :event_category_id, presence: true
   validates :user_id, presence: true
 
   scope :active, -> { where(active: true) }

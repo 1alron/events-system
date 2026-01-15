@@ -5,7 +5,7 @@ class Ticket < ApplicationRecord
 
   validates :event_id, presence: true
   validates :user_id, presence: true
-  validates :category, presence: true
+  validates :event_category_id, presence: true
 
   scope :blocked, -> { where(blocked: true) }
   scope :available, -> { where(blocked: false) }
