@@ -1,10 +1,20 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  # Сервис личного кабинета
+  post    "/users/register",                         to: "users#register"
+  post    "/users/login",                            to: "users#login"
+  post    "/users/logout",                           to: "users#logout"
+  get     "/users/:id/info",                         to: "users#info"
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get "up" => "rails/health#show", as: :rails_health_check
+  # Сервис бронирования
+  get    "/users/:id/prices",                        to: "proxy#prices"
+  get    "/users/:id/reservations",                  to: "proxy#reservations_list"
+  post   "/users/:id/reservations/create",           to: "proxy#create_reservation"
+  delete "/users/:id/reservations/:reservation_id",  to: "proxy#cancel_reservation"
+  get    "/users/:id/reservations/:reservation_id",  to: "proxy#reservation_info"
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+  # Сервис билетов
+  get    "/users/:id/tickets",                       to: "proxy#tickets_list"
+  post   "/users/:id/tickets/purchase",              to: "proxy#purchase_ticket"
+  get    "/users/:id/tickets/:ticket_id",            to: "proxy#ticket_info"
+  post   "/users/:id/tickets/:ticket_id/block",      to: "proxy#block_ticket"
 end
