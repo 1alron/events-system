@@ -1,33 +1,16 @@
-# README
+Первый запуск (development)
+1. Билд образа
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+docker-compose build
+```
+2. Создание, миграция, заполнение БД
 
-Things you may want to cover:
+```
+docker-compose run --rm booking rails db:create db:migrate db:seed
+```
 
-* Ruby version
+3. Запуск микросервиса
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-# 1. Создать базу
-rails db:create
-
-# 2. Запустить миграции
-rails db:migrate
-
-# 4. Запустить seeds
-rails db:seed
+```
+docker compose up booking
+```
