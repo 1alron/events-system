@@ -22,10 +22,24 @@ class UsersController < ApplicationController
     render json: { result: true }
   end
 
+  def info
+    user = User.find_by(id: params[:id])
+    return render json: { result: false, message: "Пользователь не найден" }, status: :not_found unless user
+    render json: {
+      result: true,
+      first_name: user.first_name,
+      second_name: user.second_name,
+      family_name: user.family_name,
+      document_type: user.document_type,
+      document_number: user.document_number,
+      birth_date: user.birth_date,
+    }
+  end
+
   private
 
   def user_params
-    params.permit(:first_name, :second_name, :family_name, :age, :document_type, :document_number, :password)
+    params.permit(:first_name, :second_name, :family_name, :birth_date, :document_type, :document_number, :password)
   end
 
   def encode_token(payload)

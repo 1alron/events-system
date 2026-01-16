@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   post    "/users/register",                         to: "users#register"
   post    "/users/login",                            to: "users#login"
   post    "/users/logout",                           to: "users#logout"
+  get     "/users/:id/info",                         to: "users#info"
 
   # Сервис бронирования
   get    "/users/:id/prices",                        to: "proxy#prices"

@@ -11,7 +11,7 @@
       "first_name": "Ivan",
       "second_name": "Petrov",
       "family_name": "Ivanovich",
-      "age": 30,
+      "age": "1994-01-01",
       "document_type": "passport",
       "document_number": "111111",
       "password": "password"

@@ -35,11 +35,12 @@ class ProxyController < ApplicationController
 
   # Создать бронь
   def create_reservation
-    body = request.raw_post
+    body = JSON.parse(request.raw_post)
+    body.merge!(user_id: params[:id])
     response = HTTParty.post(
       "#{BOOKING_URL}/reservations/create",
       headers: headers_json,
-      body: body
+      body: body.to_json
     )
     render json: response.body
   end
@@ -64,11 +65,18 @@ class ProxyController < ApplicationController
 
   # Купить билет
   def purchase_ticket
-    body = request.raw_post
+    user = User.find(params[:id])
+    body = JSON.parse(request.raw_post)
+    body.merge!(
+      first_name: user.first_name,
+      second_name: user.second_name,
+      family_name: user.family_name,
+      birth_date: user.birth_date
+    )
     response = HTTParty.post(
       "#{TICKETS_URL}/tickets/purchase",
       headers: headers_json,
-      body: body
+      body: body.to_json
     )
     render json: response.body
   end
