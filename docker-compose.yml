@@ -29,6 +29,7 @@ services:
       - postgres
     environment:
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/journal_development
+      TICKET_SERVICE_URL: http://tickets-service:3000
 
   booking:
     build: ./booking_service
