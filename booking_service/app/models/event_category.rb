@@ -19,6 +19,7 @@ class EventCategory < ApplicationRecord
   end
 
   def current_price
+    return nil if event.date < Time.current
     return base_price if sold_and_reserved.zero?
     batches_sold = (sold_and_reserved * 10 / available_tickets).floor
     (base_price * (1.1 ** batches_sold)).round(2)

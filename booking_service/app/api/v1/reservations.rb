@@ -26,7 +26,7 @@ module API
                    type: Integer,
                    desc: "ID пользователя"
         end
-        get 'user/:user_id' do
+        get "user/:user_id" do
           reservations = Reservation.where(user_id: params[:user_id])
                                     .order(created_at: :desc)
           present reservations, with: API::Entities::Reservations::Base
@@ -55,7 +55,6 @@ module API
           error!("Категория не найдена для данного события", 404) unless event_category
 
           reservation = Reservation.create!(
-            event: event_category.event,
             active: true,
             user_id: params[:user_id],
             valid_to: 5.minutes.from_now,
@@ -78,7 +77,7 @@ module API
 
           desc "Отменить бронь",
                success: { model: "API::Entities::Reservations::Base" }
-          patch 'cancel' do
+          patch "cancel" do
             @reservation.update!(active: false)
             present @reservation, with: API::Entities::Reservations::Base
           end
