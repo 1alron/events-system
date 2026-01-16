@@ -1,8 +1,10 @@
 # events-system
-### Запуск:
-```docker compose up --build```
+### Сборка:
+```docker compose build```
 ### Формирование БД для брони:
 ```docker-compose run --rm booking rails db:create db:migrate db:seed```
+### Запуск:
+```docker compose up```
 ### Если не сохраняются файлы
 ```sudo chown -R $USER:$USER .```
 
