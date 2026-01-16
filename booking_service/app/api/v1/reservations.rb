@@ -61,6 +61,8 @@ module API
             event_category: event_category
           )
 
+          CancelReservationJob.set(wait: 1.minutes).perform_later(reservation.id)
+
           present reservation, with: API::Entities::Reservations::Base
         end
 

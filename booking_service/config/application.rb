@@ -42,5 +42,7 @@ module App
     config.paths.add "app/api", glob: "**/*.rb"
     config.autoload_paths += Dir["#{Rails.root}/app/api"]
     config.autoload_paths += Dir["#{Rails.root}/app/api/**/"]
+
+    config.active_job.queue_adapter = :sidekiq
   end
 end
