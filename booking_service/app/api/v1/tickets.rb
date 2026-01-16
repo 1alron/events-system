@@ -19,79 +19,21 @@ module API
           present tickets, with: API::Entities::Tickets::Base
         end
 
-        desc "Получить список билетов по ID события",
-             success:  { model: "API::Entities::Tickets::Base", is_array: true }
-        params do
-          requires :event_id,
-                   type: Integer,
-                   desc: "ID события"
-          optional :page,
-                   type: Integer,
-                   default: 1,
-                   desc: "Номер страницы"
-          optional :per_page,
-                   type: Integer,
-                   default: 20,
-                   desc: "Количество элементов на странице"
-          optional :category_id,
-                   type: Integer,
-                   desc: "Фильтр по ID категории"
-        end
-        get "/event/:event_id" do
-          @event = Event.find(params[:event_id])
-
-          tickets = @event.tickets
-          tickets = tickets.where(event_category_id: params[:category_id]) if params[:category_id]
-          tickets = tickets.order(created_at: :desc)
-
-          paginated_tickets = tickets.page(params[:page]).per(params[:per_page])
-
-          present paginated_tickets, with: API::Entities::Tickets::Base
-        end
-
         desc "Получить список билетов пользователя по его ID",
              is_array: true,
-             success:  { model: "API::Entities::Tickets::Base", is_array: true }
+             success: { model: "API::Entities::Tickets::Base", is_array: true }
+        resource :user do
+          params do
+            requires :user_id,
+                     type: Integer,
+                     desc: "ID пользователя"
+          end
 
-        params do
-          requires :user_id,
-                   type: Integer,
-                   desc: "ID пользователя"
+          get ":user_id" do
+            tickets = Ticket.where(user_id: params[:user_id])
+            present tickets, with: API::Entities::Tickets::Base
+          end
         end
-        get "/user/:user_id" do
-          tickets = tickets.where(user_id: params[:user_id])
-          present tickets, with: API::Entities::Tickets::Base
-        end
-
-        # desc 'Создать новый билет',
-        #      success:  { model: "API::Entities::Tickets::Base" }
-        # params do
-        #     requires :event_id,
-        #              type: Integer,
-        #              desc: 'ID события'
-        #     requires :category,
-        #              type: String,
-        #              desc: 'Категоричя события'
-        #     requires :user_name,
-        #              type: String,
-        #              desc: 'ФИО владельца билета'
-        #     requires :user_id,
-        #              type: Integer,
-        #              desc: 'ID пользователя (если отличается от текущего)'
-        #     requires :user_birth_date,
-        #              type: Datetime,
-        #              desc: 'Дата рождения пользователя'
-        #   end
-        # end
-        # post do
-
-        #   # Проверка существования события и категории
-        #   event = Event.find(declared_params[:event_id])
-
-        #   event_category = EventCategory.find(category.name: declared_params[:category], event_id: event.id)
-
-
-
 
         route_param :id do
           before { @ticket = Ticket.find(params[:id]) }

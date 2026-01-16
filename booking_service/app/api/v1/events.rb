@@ -2,46 +2,58 @@ module API
   module V1
     class Events < Grape::API
       resource :events do
-        # GET /api/v1/events
         desc "Получить список всех мероприятий",
              is_array: true,
-             success: API::Entities::Events::Base
+             success: "API::Entities::Events::Base"
         get do
           events = Event.all
           present events, with: API::Entities::Events::Base
         end
 
-        # Общий блок для маршрутов с :id
         route_param :id, type: Integer do
           before do
             @event = Event.find(params[:id])
           end
 
-          # GET /api/v1/events/:id
           desc "Получить информацию о мероприятии",
-               success: API::Entities::Events::Base
+               success: "API::Entities::Events::Base"
           get do
             present @event, with: API::Entities::Events::Base
           end
 
-          #   # Другие маршруты для конкретного мероприятия
-          #   # GET /api/v1/events/:id/tickets
-          #   desc 'Получить билеты мероприятия',
-          #        is_array: true,
-          #        success: API::Entities::Tickets::Base
-          #   get :tickets do
-          #     tickets = @event.tickets
-          #     present tickets, with: API::Entities::Tickets::Base
-          #   end
-          #
-          #   # GET /api/v1/events/:id/categories
-          #   desc 'Получить категории мероприятия',
-          #        is_array: true,
-          #        success: API::Entities::EventCategories::Base
-          #   get :categories do
-          #     categories = @event.event_categories
-          #     present categories, with: API::Entities::EventCategories::Base
-          #   end
+          resource "tickets" do
+            desc "Получить список билетов по ID события",
+                 success:  { model: "API::Entities::Tickets::Base", is_array: true }
+            params do
+              optional :category,
+                       type: String,
+                       desc: "Фильтр по категории"
+            end
+            get do
+              tickets = @event.tickets
+              tickets = tickets.where(event_category_id: params[:category_id]) if params[:category_id]
+              tickets = tickets.order(created_at: :desc)
+
+              present tickets, with: API::Entities::Tickets::Base
+            end
+          end
+
+          resource "reservations" do
+            desc "Получить список бронирований по ID события",
+                 success: { model: "API::Entities::Reservations::Base", is_array: true }
+            params do
+              optional :category_id,
+                       type: Integer,
+                       desc: "Фильтр по ID категории"
+            end
+            get do
+              reservations = @event.reservations
+              reservations = reservations.where(event_category_id: params[:category_id]) if params[:category_id]
+              reservations = reservations.order(created_at: :desc)
+
+              present reservations, with: API::Entities::Reservations::Base
+            end
+          end
         end
       end
     end

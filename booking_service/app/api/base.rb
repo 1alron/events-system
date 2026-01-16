@@ -28,6 +28,7 @@ module API
 
     # Теперь можно монтировать
     mount API::V1::Tickets
+    mount API::V1::Reservations
     mount API::V1::Events
 
     # Дополнительные endpoint в base

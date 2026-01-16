@@ -1,26 +1,18 @@
 module API
   module Entities
-    module Tickets
+    module Reservations
     class Base < Grape::Entity
       expose :id,
              documentation: {
                type: Integer,
-               desc: "Идентификатор билета",
+               desc: "Идентификатор",
                example: 123
              }
 
-      expose :user_name,
-             as: :user_fio,
-             documentation: {
-               type: String,
-               desc: "ФИО владельца билета",
-               example: "Иван Иванович Иванов"
-             }
-
-      expose :blocked,
+      expose :active,
              documentation: {
                type: "Boolean",
-               desc: "Статус блокировки билета",
+               desc: "Признак активности брони",
                example: false
              }
 
@@ -41,20 +33,37 @@ module API
       expose :event_category,
              documentation: {
                type: String,
-               desc: "Категория билета",
+               desc: "Категория",
                example: "VIP"
-             } do |ticket|
-        ticket.event_category.category.name
-        end
+             } do |reservation|
+        reservation.event_category.category.name
+      end
+
+      expose :event_name,
+             documentation: {
+               type: String,
+               desc: "Название мероприяти",
+               example: "Концерт"
+             } do |reservation|
+        reservation.event.name
+      end
 
         expose :event_date,
                documentation: {
                  type: String,
                  desc: "Дата мероприятия",
                  example: "15.06.2027 10:30"
-               } do |ticket|
-          ticket.event.date.strftime("%d.%m.%Y %H:%M")
-          end
+               } do |reservation|
+          reservation.event.date.strftime("%d.%m.%Y %H:%M")
+        end
+
+      expose :valid_to,
+             documentation: {
+               type: String,
+               desc: "Время, до которого валидна бронь",
+               example: "15.06.2027 10:30"
+             }
+
 
       private
 
