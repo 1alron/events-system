@@ -102,7 +102,14 @@ module API
             if @ticket.blocked?
               error!("Билет уже заблокирован", 422)
             end
-            # todo user_info
+            account_response = http_client.account_service.user_info(@ticket.user_id)
+            error!('Ошибка получения данных пользователя') unless account_response.success?
+            user_info = JSON.parse(account_response.body)
+            if user_info['document_type'] != params[:document_type] ||
+              user_info['document_number'].to_i != params[:document_number]
+              error!("Данные документа не совпадают с данными пользователя", 422)
+            end
+
             @ticket.update(blocked: true)
             present @ticket, with: API::Entities::Tickets::Base
           end
