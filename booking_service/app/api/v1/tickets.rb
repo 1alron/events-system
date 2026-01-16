@@ -1,6 +1,8 @@
 module API
   module V1
     class Tickets < Grape::API
+      require_relative '../concerns/http_client'
+      include API::Concerns::HttpClient
       resource :tickets do
         desc "Получить список всех билетов",
              is_array: true,
