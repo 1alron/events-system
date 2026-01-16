@@ -2,12 +2,11 @@ class ProxyController < ApplicationController
   before_action :authorize!
 
   BOOKING_URL = ENV.fetch("BOOKING_URL")
-  TICKETS_URL = ENV.fetch("TICKETS_URL")
 
   # Получение билетов пользователя
   def tickets_list
     response = HTTParty.get(
-      "#{TICKETS_URL}/users/#{params[:user_id]}/tickets",
+      "#{BOOKING_URL}/users/#{params[:user_id]}/tickets",
       headers: headers_json,
       query: { user_id: params[:id] }
     )
@@ -27,7 +26,7 @@ class ProxyController < ApplicationController
   # Получение цены
   def prices
     response = HTTParty.get(
-      "#{BOOKING_URL}/prices",
+      "#{BOOKING_URL}/api/v1/prices",
       query: params.permit(:event_date, :category)
     )
     render json: response.body
@@ -74,7 +73,7 @@ class ProxyController < ApplicationController
       birth_date: user.birth_date
     )
     response = HTTParty.post(
-      "#{TICKETS_URL}/tickets/purchase",
+      "#{BOOKING_URL}/tickets/purchase",
       headers: headers_json,
       body: body.to_json
     )
@@ -84,7 +83,7 @@ class ProxyController < ApplicationController
   # Получить билет
   def ticket_info
     response = HTTParty.get(
-      "#{TICKETS_URL}/tickets/#{params[:ticket_id]}",
+      "#{BOOKING_URL}/tickets/#{params[:ticket_id]}",
       headers: headers_json
     )
     render json: response.body
@@ -94,7 +93,7 @@ class ProxyController < ApplicationController
   def block_ticket
     body = request.raw_post
     response = HTTParty.post(
-      "#{TICKETS_URL}/tickets/#{params[:ticket_id]}/block",
+      "#{BOOKING_URL}/tickets/#{params[:ticket_id]}/block",
       headers: headers_json,
       body: body
     )

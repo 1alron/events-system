@@ -7,7 +7,6 @@ Rails.application.configure do
   config.enable_reloading = true
 
   config.hosts << "booking:3000"
-  config.hosts << "ticket:3000"
 
   # Do not eager load code on boot.
   config.eager_load = false
