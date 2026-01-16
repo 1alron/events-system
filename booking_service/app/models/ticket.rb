@@ -8,12 +8,4 @@ class Ticket < ApplicationRecord
 
   scope :blocked, -> { where(blocked: true) }
   scope :available, -> { where(blocked: false) }
-
-  def vip?
-    category == "vip" || category == 0
-  end
-
-  def fanzone?
-    category == "fanzone" || category == 1
-  end
 end

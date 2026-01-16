@@ -24,9 +24,11 @@ module API
 
     # Явно загрузите модуль V1
     require_relative "v1/tickets"
+    require_relative "v1/events"
 
     # Теперь можно монтировать
     mount API::V1::Tickets
+    mount API::V1::Events
 
     # Дополнительные endpoint в base
     get :health do

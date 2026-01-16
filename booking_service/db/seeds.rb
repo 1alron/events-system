@@ -40,6 +40,7 @@ Reservation.create!(
 ticket1 = Ticket.create!(
   event: event1,
   event_category: event1_vip,
+  user_name: "Иванов Иван Иванович",
   user_id: 1,
   blocked: false
 )
@@ -47,6 +48,7 @@ ticket1 = Ticket.create!(
 ticket2 = Ticket.create!(
   event: event1,
   event_category: event1_vip,
+  user_name: "Иванов Иван Иванович",
   user_id: 2,
   blocked: false
 )
@@ -54,6 +56,7 @@ ticket2 = Ticket.create!(
 ticket3 = Ticket.create!(
   event: event1,
   event_category: event1_fanzone,
+  user_name: "Иванов Иван Иванович",
   user_id: 3,
   blocked: false
 )
@@ -61,6 +64,7 @@ ticket3 = Ticket.create!(
 ticket4 = Ticket.create!(
   event: event1,
   event_category: event1_fanzone,
+  user_name: "Иванов Иван Иванович",
   user_id: 4,
   blocked: true
 )

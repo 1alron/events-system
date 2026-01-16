@@ -2,90 +2,156 @@ module API
   module V1
     class Tickets < Grape::API
       resource :tickets do
-        # Маршрут для получения цены билета
-        desc "Рассчитать стоимость билета"
+        desc "Получить список всех билетов",
+             is_array: true,
+             success:  { model: "API::Entities::Tickets::Base", is_array: true }
+
         params do
-          requires :event_id, type: Integer, desc: "ID мероприятия"
-          requires :category_name, type: String, desc: "Название категории (vip, fanzone, standard, economy)"
+          optional :include_blocked,
+                   type: Boolean,
+                   default: false,
+                   desc: "Включить заблокированные билеты"
         end
-        get "price" do
-          # Находим категорию по имени
-          category = Category.find_by(name: params[:category_name])
-          error!("Категория не найдена", 404) unless category
-
-          # Находим связь мероприятия с категорией
-          event_category = EventCategory.find_by(
-            event_id: params[:event_id],
-            category_id: category.id
-          )
-          error!("Мероприятие или связь с категорией не найдены", 404) unless event_category
-
-          # Проверяем доступность билетов
-          if event_category.sold_and_reserved >= event_category.available_tickets
-            error!("Билеты данной категории распроданы", 400)
-          end
-
-          price = event_category.current_price
-
-          {
-            success: true,
-            event_id: event_category.event_id,
-            event_name: event_category.event.name,
-            category_name: event_category.category.name,
-            base_price: event_category.base_price,
-            current_price: price,
-            occupied_tickets: event_category.sold_and_reserved,
-            available_tickets: event_category.available_tickets,
-            tickets_available: event_category.available_tickets - event_category.sold_and_reserved
-          }
+        get do
+          tickets = Ticket.all
+          tickets = tickets.where(blocked: false) unless params[:include_blocked]
+          tickets = tickets.order(created_at: :desc)
+          present tickets, with: API::Entities::Tickets::Base
         end
 
-        # Маршрут для получения всех цен мероприятия
-        desc "Получить все цены для мероприятия"
+        desc "Получить список билетов по ID события",
+             success:  { model: "API::Entities::Tickets::Base", is_array: true }
         params do
-          requires :event_id, type: Integer, desc: "ID мероприятия"
+          requires :event_id,
+                   type: Integer,
+                   desc: "ID события"
+          optional :page,
+                   type: Integer,
+                   default: 1,
+                   desc: "Номер страницы"
+          optional :per_page,
+                   type: Integer,
+                   default: 20,
+                   desc: "Количество элементов на странице"
+          optional :category_id,
+                   type: Integer,
+                   desc: "Фильтр по ID категории"
         end
-        get ":event_id/prices" do
-          event = Event.find(params[:event_id])
+        get "/event/:event_id" do
+          @event = Event.find(params[:event_id])
 
-          prices = event.event_categories.map do |ec|
-            {
-              category_id: ec.category_id,
-              category_name: ec.category.name,
-              base_price: ec.base_price,
-              current_price: ec.current_price,
-              occupied_tickets: ec.sold_and_reserved,
-              available_tickets: ec.available_tickets,
-              tickets_available: ec.available_tickets - ec.sold_and_reserved
-            }
+          tickets = @event.tickets
+          tickets = tickets.where(event_category_id: params[:category_id]) if params[:category_id]
+          tickets = tickets.order(created_at: :desc)
+
+          paginated_tickets = tickets.page(params[:page]).per(params[:per_page])
+
+          present paginated_tickets, with: API::Entities::Tickets::Base
+        end
+
+        desc "Получить список билетов пользователя по его ID",
+             is_array: true,
+             success:  { model: "API::Entities::Tickets::Base", is_array: true }
+
+        params do
+          requires :user_id,
+                   type: Integer,
+                   desc: "ID пользователя"
+        end
+        get "/user/:user_id" do
+          tickets = tickets.where(user_id: params[:user_id])
+          present tickets, with: API::Entities::Tickets::Base
+        end
+
+        # desc 'Создать новый билет',
+        #      success:  { model: "API::Entities::Tickets::Base" }
+        # params do
+        #     requires :event_id,
+        #              type: Integer,
+        #              desc: 'ID события'
+        #     requires :category,
+        #              type: String,
+        #              desc: 'Категоричя события'
+        #     requires :user_name,
+        #              type: String,
+        #              desc: 'ФИО владельца билета'
+        #     requires :user_id,
+        #              type: Integer,
+        #              desc: 'ID пользователя (если отличается от текущего)'
+        #     requires :user_birth_date,
+        #              type: Datetime,
+        #              desc: 'Дата рождения пользователя'
+        #   end
+        # end
+        # post do
+
+        #   # Проверка существования события и категории
+        #   event = Event.find(declared_params[:event_id])
+
+        #   event_category = EventCategory.find(category.name: declared_params[:category], event_id: event.id)
+
+
+
+
+        route_param :id do
+          before { @ticket = Ticket.find(params[:id]) }
+          desc "Получить информацию о конкретном билете",
+               success:  { model: "API::Entities::Tickets::Base" }
+          get do
+            present @ticket, with: API::Entities::Tickets::Base
           end
-
-          {
-            success: true,
-            event_id: event.id,
-            event_name: event.name,
-            event_date: event.date,
-            categories_count: prices.count,
-            categories: prices
-          }
         end
 
-        # Тестовый маршрут для проверки
-        desc "Проверка работы API"
-        get "status" do
-          {
-            status: "ok",
-            service: "booking",
-            timestamp: Time.current.iso8601,
-            models: {
-              events: Event.count,
-              categories: Category.count,
-              event_categories: EventCategory.count,
-              tickets: Ticket.count,
-              reservations: Reservation.count
-            }
-          }
+        desc "Заблокировать билет",
+             success:  { model: "API::Entities::Tickets::Base" }
+
+        params do
+          requires :id,
+                   type: Integer,
+                   desc: "ID билета"
+          requires :document_type,
+                   type: String,
+                   allow_blank: false,
+                   desc: "Тип документа"
+          requires :document_number,
+                   type: Integer,
+                   desc: "номер документа"
         end
+          patch "/block" do
+            if @ticket.blocked?
+              error!("Билет уже заблокирован", 422)
+            end
+            # todo user_info
+            @ticket.update(blocked: true)
+            present @ticket, with: API::Entities::Tickets::Base
+
+
+      resource :price do
+  # Маршрут для получения цены билета
+  desc "Рассчитать стоимость билета"
+  params do
+    requires :event_id, type: Integer, desc: "ID мероприятия"
+    requires :category_name, type: String, desc: "Название категории (vip, fanzone, standard, economy)"
+  end
+  get "price" do
+    # Находим категорию по имени
+    category = Category.find_by(name: params[:category_name])
+    error!("Категория не найдена", 404) unless category
+
+    event_category = EventCategory.find_by(
+      event_id: params[:event_id],
+      category_id: category.id
+    )
+    error!("Мероприятие или связь с категорией не найдены", 404) unless event_category
+
+    if event_category.sold_and_reserved >= event_category.available_tickets
+      error!("Билеты данной категории распроданы", 400)
+    end
+
+    present event_category, with: API::Entities::EventsCategories::Full
+  end
+      end
+            end
       end
     end
   end

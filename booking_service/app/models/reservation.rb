@@ -8,12 +8,4 @@ class Reservation < ApplicationRecord
 
   scope :active, -> { where(active: true) }
   scope :expired, -> { where("valid_to < ?", Time.current) }
-
-  def vip?
-    category == "vip" || category == 0
-  end
-
-  def fanzone?
-    category == "fanzone" || category == 1
-  end
 end
