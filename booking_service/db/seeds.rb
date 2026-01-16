@@ -22,7 +22,6 @@ event2_vip = event2.add_category(vip_category, 4500)
 event2_fanzone = event2.add_category(fanzone_category, 2500)
 
 Reservation.create!(
-  event: event1,
   event_category: event1_vip,
   user_id: 1,
   active: true,
@@ -30,7 +29,6 @@ Reservation.create!(
 )
 
 Reservation.create!(
-  event: event1,
   event_category: event1_fanzone,
   user_id: 2,
   active: true,
@@ -38,7 +36,6 @@ Reservation.create!(
 )
 
 ticket1 = Ticket.create!(
-  event: event1,
   event_category: event1_vip,
   user_name: "Иванов Иван Иванович",
   user_id: 1,
@@ -46,7 +43,6 @@ ticket1 = Ticket.create!(
 )
 
 ticket2 = Ticket.create!(
-  event: event1,
   event_category: event1_vip,
   user_name: "Иванов Иван Иванович",
   user_id: 2,
@@ -54,7 +50,6 @@ ticket2 = Ticket.create!(
 )
 
 ticket3 = Ticket.create!(
-  event: event1,
   event_category: event1_fanzone,
   user_name: "Иванов Иван Иванович",
   user_id: 3,
@@ -62,7 +57,6 @@ ticket3 = Ticket.create!(
 )
 
 ticket4 = Ticket.create!(
-  event: event1,
   event_category: event1_fanzone,
   user_name: "Иванов Иван Иванович",
   user_id: 4,

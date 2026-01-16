@@ -24,13 +24,6 @@ module API
                example: false
              }
 
-      expose :event_id,
-             documentation: {
-               type: Integer,
-               desc: "Идентификатор связанного события",
-               example: 1
-             }
-
       expose :user_id,
              documentation: {
                type: Integer,
