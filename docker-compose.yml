@@ -69,18 +69,6 @@ services:
     environment:
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/account_development
 
-  ticket:
-    build: ./ticket_service
-    container_name: ticket_service
-    volumes:
-      - ./ticket_service:/app
-    ports:
-      - "3004:3000"
-    depends_on:
-      - postgres
-    environment:
-      DATABASE_URL: postgres://postgres:postgres@postgres:5432/ticket_development
-
 volumes:
   pg_data:
   redis_data:
