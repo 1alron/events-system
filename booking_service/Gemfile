@@ -42,6 +42,8 @@ gem "grape-entity"
 gem "grape-swagger"
 gem "grape-swagger-rails"
 
+gem 'httparty'
+
 gem "sidekiq"
 
 group :development, :test do
