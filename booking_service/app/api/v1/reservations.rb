@@ -18,20 +18,6 @@ module API
           present reservations, with: API::Entities::Reservations::Base
         end
 
-        desc "Получить список бронирований пользователя",
-             is_array: true,
-             success: { model: "API::Entities::Reservations::Base", is_array: true }
-        params do
-          requires :user_id,
-                   type: Integer,
-                   desc: "ID пользователя"
-        end
-        get "user/:user_id" do
-          reservations = Reservation.where(user_id: params[:user_id])
-                                    .order(created_at: :desc)
-          present reservations, with: API::Entities::Reservations::Base
-        end
-
         desc "Забронировать билет",
              success: { model: "API::Entities::Reservations::Base" }
         params do
