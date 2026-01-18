@@ -74,7 +74,12 @@ class TurnstileController < ApplicationController
   end
 
   def fetch_user_name(user_id)
-    #TODO получать имя либо по id, либо из билета
-    "user service name"
+    user = UserServiceClient.get_user(user_id)
+    
+    if user && user['full_name'].present?
+      return user['full_name']
+    else
+      return "Пользователь #{user_id}"
+    end
   end
 end
